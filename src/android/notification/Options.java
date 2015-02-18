@@ -281,7 +281,7 @@ public class Options {
         int resId = assets.getResIdForDrawable(icon);
 
         if (resId == 0) {
-            resId = android.R.drawable.screen_background_dark;
+            resId = assets.getResIdForDrawable("icon");
         }
 
         return resId;
