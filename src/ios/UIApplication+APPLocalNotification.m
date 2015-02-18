@@ -202,7 +202,10 @@ if(IS_OS_8_OR_LATER) {
 
     for (UILocalNotification* notification in notifications)
     {
-        if ([notification.options.id isEqualToString:id]) {
+        //  this is causing a crash because of the notification.options.id being 'seen' as a number compared with a string. isEqualToString throws an exception.
+        // Apologies: my naive kludge fix is to wrap notification.options.id in [NSString stringWithFormat:@"%@", notification.options.id] to convert it into something compatible with isEqualToString; BUT not sure if this actually, properly does the comparison wanted
+        //     if ([notification.options.id isEqualToString:id]) {
+        if ([[NSString stringWithFormat:@"%@", notification.options.id] isEqualToString:id]) {
             return notification;
         }
     }
