@@ -395,8 +395,15 @@
     [self.commandDelegate runInBackground:^{
         CDVPluginResult* result;
         BOOL hasPermission;
-
-        hasPermission = [self.app hasPermissionToScheduleLocalNotifications];
+        if (IS_OS_8_OR_LATER)
+        {
+             hasPermission = [self.app hasPermissionToScheduleLocalNotifications];
+        }
+        else
+        {
+            hasPermission = YES;
+        }
+       
 
         result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                      messageAsBool:hasPermission];
@@ -411,16 +418,18 @@
  */
 - (void) registerPermission:(CDVInvokedUrlCommand*)command
 {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-
-    _command = command;
-
-    [self.commandDelegate runInBackground:^{
-        [self.app registerPermissionToScheduleLocalNotifications];
-    }];
-#else
-    [self hasPermission:command];
-#endif
+    if (IS_OS_8_OR_LATER)
+    {
+        _command = command;
+        
+        [self.commandDelegate runInBackground:^{
+            [self.app registerPermissionToScheduleLocalNotifications];
+        }];
+    }
+    else
+    {
+        [self hasPermission:command];
+    }
 }
 
 #pragma mark -
